@@ -1,94 +1,19 @@
-﻿using DailyMealPlanner.src.model.business;
-using DailyMealPlanner.src.model.domain;
-using DailyMealPlanner.src.model.domain.enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 
-namespace DailyMealPlanner.src.model.domain
+namespace DailyMealPlanner.model.business
 {
-    public abstract class MealTime
+    public class MealTime
     {
-        TIME time;
+        public Time Time { get; set;}
 
-        SortedDictionary<Element, int> products;
+        public ObservableCollection<Product> Products { get; set; }
 
         public MealTime() { }
 
-        public double Gramms
+        public MealTime(Time time)
         {
-            get
-            {
-                double resultGramms = 0;
-                foreach(Element i in products.Keys)
-                {
-                    resultGramms += i.Product.Gramms * products[i];
-                }
-                return resultGramms;
-            }
-        }
-        public double Protein
-        {
-            get
-            {
-                double resultProtein = 0;
-                foreach (Element i in products.Keys)
-                {
-                    resultProtein += i.Product.Protein * products[i];
-                }
-                return resultProtein;
-            }
-        }
-
-        public double Fats
-        {
-            get
-            {
-                double resultFats = 0;
-                foreach (Element i in products.Keys)
-                {
-                    resultFats += i.Product.Fats * products[i];
-                }
-                return resultFats;
-            }
-        }
-        public double Carbs
-        {
-            get
-            {
-                double resultCarbs = 0;
-                foreach (Element i in products.Keys)
-                {
-                    resultCarbs += i.Product.Carbs * products[i];
-                }
-                return resultCarbs;
-            }
-        }
-        public double Calories
-        {
-            get
-            {
-                double resultCalories = 0;
-                foreach (Element i in products.Keys)
-                {
-                    resultCalories += i.Product.Calories * products[i];
-                }
-                return resultCalories;
-            }
-        }
-
-        public void addProduct(Element element)
-        {
-            if (products.Keys.Contains(element))
-            {
-                products[element]++;
-            }
-            else
-            {
-                products.Add(element, 1);
-            }
+            this.Time = time;
+            Products = new ObservableCollection<Product>();
         }
     }
 }

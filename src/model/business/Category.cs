@@ -1,95 +1,46 @@
-﻿using DailyMealPlanner.src.model.domain.enums;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace DailyMealPlanner.src.model.domain
+namespace DailyMealPlanner.model.business
 {
     public class Category
     {
-        //русское и английское название категорий
-        private static Hashtable categoryName = new Hashtable();
+        private static readonly Dictionary<string,Category> AllCategories = new Dictionary<string, Category>();
 
-        CATEGORY name;
-        string description;
-        List<Product> products;
+        public string Name { get; set; }
+        public string Description { get; set; }
 
-        static Category()
+        private Category() { }
+
+        private Category(string name, string description)
         {
-            categoryName.Add("Алкоголь", CATEGORY.ALCHOHOL);
-            categoryName.Add("Готовые блюда", CATEGORY.READYMEALS);
-            categoryName.Add("Грибы", CATEGORY.MINCE);
-            categoryName.Add("Каши, крупы", CATEGORY.PORRIDGEGRITS);
-            categoryName.Add("Колбаса", CATEGORY.WURST);
-            categoryName.Add("Компоты", CATEGORY.SAUCE);
-            categoryName.Add("Масла", CATEGORY.OILS);
-            categoryName.Add("Молочные", CATEGORY.CREAMERY);
-            categoryName.Add("Замороженные овощи", CATEGORY.FROZENVEGATABLES);
-            categoryName.Add("Мучное", CATEGORY.STARCHYFOOD);
-            categoryName.Add("Мясо", CATEGORY.MEET);
-            categoryName.Add("Овощи", CATEGORY.VEGETABLES);
-            categoryName.Add("Орехи", CATEGORY.MUESLI);
-            categoryName.Add("Прочее", CATEGORY.OTHER);
-            categoryName.Add("Рыба", CATEGORY.FISH);
-            categoryName.Add("Сладости", CATEGORY.SWEET);
-            categoryName.Add("Соки", CATEGORY.JUICE);
-            categoryName.Add("Супы", CATEGORY.SOUPS);
-            categoryName.Add("Сухофрукты", CATEGORY.DRIEDFRUITS);
-            categoryName.Add("Сыры", CATEGORY.CHEESE);
-            categoryName.Add("Творог", CATEGORY.QUARK);
-            categoryName.Add("Фрукты", CATEGORY.FRUITS);
-            categoryName.Add("Хлеб", CATEGORY.BREAD);
-            categoryName.Add("Ягоды", CATEGORY.BERRY);
-            categoryName.Add("Яйца", CATEGORY.EGG);
+            this.Name = name;
+            this.Description = description;
         }
 
-        public Category()
+        public static Category GetInstance(string nameCategory, string description)
         {
-            setName(CATEGORY.INVALID);
-            Products = new List<Product>();
+            if (AllCategories.TryGetValue(nameCategory, out Category resultCategory)) return resultCategory;
+            Category bufCategory = new Category(nameCategory, description);
+            AllCategories.Add(nameCategory, bufCategory);
+            return bufCategory;
         }
 
-        public List<Product> Products { get => products; set => products = value; }
-        public string Description { get => description; set => description = value; }
-
-        public void setName(CATEGORY name)
+        public override int GetHashCode()
         {
-            this.name = name;
+            return Name.GetHashCode() + Description.GetHashCode();
         }
 
-        public void setName(string name)
+        public override bool Equals(object obj)
         {
-            if (categoryName.ContainsKey(name))
-            {
-                setName((CATEGORY)categoryName[name]);
-            }
-            else
-            {
-                setName(CATEGORY.INVALID);
-            }
+            if (this == obj) return true;
+            if (!(obj is Category) && (obj == null)  ) return false;
+            Category obj1 = (Category)obj;
+            return this.Name == obj1.Name && this.Description == obj1.Description;
         }
 
-        public CATEGORY getName()
+        public override string ToString()
         {
-            return this.name;
-        }
-
-        public string getName(CATEGORY name)
-        {
-            if (categoryName.ContainsValue(name))
-            {
-                foreach(DictionaryEntry element in categoryName)
-                {
-                    if((CATEGORY)element.Value == name)
-                    {
-                        return (string)element.Key;
-                    }
-                }
-            }
-            return CATEGORY.INVALID.ToString();
+            return Name;
         }
     }
 }
